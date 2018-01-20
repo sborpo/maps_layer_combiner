@@ -10,17 +10,17 @@ import xml.etree.ElementTree as ET
 g_images_fold = 'images'
 g_kml_file = 'doc.kml'
 
-#stam
 
 class KmzFile:
-
     # Set the namespace
     namespace = 'http://www.opengis.net/kml/2.2'
 
     # Register the namespace
     ET.register_namespace('', namespace)
+
     def __init__(self, combined_layer_name):
-        template = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="{}"><Document><name>{}</name></Document></kml>'.format(KmzFile.namespace,
+        template = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="{}"><Document><name>{}</name></Document></kml>'.format(
+            KmzFile.namespace,
             combined_layer_name)
         self.working_directory = tempfile.mkdtemp()
         self.images_tree = os.path.join(self.working_directory, g_images_fold)
@@ -30,11 +30,10 @@ class KmzFile:
         self.document_root = self.file_tree.find('{{{0}}}Document'.format(KmzFile.namespace))
         self.name_tag = '{{{0}}}name'.format(KmzFile.namespace)
 
-
     def add_layer(self, layer_root):
 
         # Copy all the properties
-        layer_tree = ET.parse(os.path.join(layer_root,g_kml_file))
+        layer_tree = ET.parse(os.path.join(layer_root, g_kml_file))
         document_elem = layer_tree.find('{{{0}}}Document'.format(KmzFile.namespace))
         if document_elem is None:
             raise Exception('The Document element is not found in the kml file')
@@ -53,8 +52,10 @@ class KmzFile:
         ET.ElementTree(self.document_root).write(self.kml_xml, encoding='UTF-8')
         shutil.make_archive(dest, 'zip', self.working_directory)
 
+
 def dir_content(dir):
     return [os.path.join(dir, file_name) for file_name in os.listdir(dir)]
+
 
 def normalize_images(root_path, image_number):
     images_folder = os.path.join(root_path, g_images_fold)
@@ -65,7 +66,7 @@ def normalize_images(root_path, image_number):
         new_image_name = 'combiner_{}.jpg'.format(image_number)
         name_map[os.path.basename(image)] = new_image_name
         os.rename(image, os.path.join(images_folder, new_image_name))
-        image_number+=1
+        image_number += 1
 
     with open(kml_file, 'rb') as kml_file_source:
         content = kml_file_source.read()
@@ -78,9 +79,11 @@ def normalize_images(root_path, image_number):
 
     return image_number
 
+
 def create_dir(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
+
 
 def combine_files(file_paths, target_file):
     image_numbering = 0
@@ -111,16 +114,14 @@ def combine_files(file_paths, target_file):
         if target_file_dir is not None:
             shutil.rmtree(target_file_dir)
 
+
 if __name__ == '__main__':
 
     try:
         source = raw_input('Enter the directory that holds the layers to combine (KMZ files):')
         target_file = raw_input('Enter the file path of the combined file (i.e c:\\combined.kmz')
         files = dir_content(source)
-        combine_files(files,target_file)
+        combine_files(files, target_file)
         print 'Combined layers successfully and saved to: {}'.format(target_file)
     except Exception as e:
         print 'There was an error: {}'.format(e.message)
-
-
-
