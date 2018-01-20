@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 g_images_fold = 'images'
 g_kml_file = 'doc.kml'
 
-
+#stam
 
 class KmzFile:
 
