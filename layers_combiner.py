@@ -11,7 +11,7 @@ g_images_fold = 'images'
 g_kml_file = 'doc.kml'
 
 # Just a comment
-
+# just a comment 2
 class KmzFile:
     # Set the namespace
     namespace = 'http://www.opengis.net/kml/2.2'
